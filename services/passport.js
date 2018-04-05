@@ -69,7 +69,20 @@ passport.use(
 			User
 				.findOne({ facebookId: profile.id })
 				.then((existingUser) => {
-					res.send(existingUser);
+					if (existingUser) {
+						//login to existing account
+						done(null, existingUser);
+					}
+					else {
+						//create new account
+						new User({
+							facebookId: profile.id,
+							userEmail: profile.emails,
+							name: profile.name
+						})
+						.save()
+						.then(user => done(null, user));
+					}
 				})
 		}
 	)
