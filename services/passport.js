@@ -69,7 +69,7 @@ passport.use(
 			User
 				.findOne({ facebookId: profile.id })
 				.then((existingUser) => {
-					console.log(existingUser);
+					res.send(existingUser);
 				})
 		}
 	)

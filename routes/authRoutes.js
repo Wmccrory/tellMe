@@ -23,7 +23,7 @@ module.exports = (app) => {
 		scope: ['public_profile', 'email']
 	}));
 
-	app.get('/auth/facebook/callback', passport.authenticate('facebook', {successRedirect: '/', failureRedirect: '/failed'}));
+	app.get('/auth/facebook/callback', passport.authenticate('facebook', {successRedirect: '/api/current_user', failureRedirect: '/failed'}));
 
 	//user profile
 	
