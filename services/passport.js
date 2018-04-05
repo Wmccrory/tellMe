@@ -77,6 +77,7 @@ passport.use(
 						//create new account
 						new User({
 							facebookId: profile.id,
+							facebookProfile: profile,
 							userEmail: profile.emails,
 							name: profile.name
 						})
