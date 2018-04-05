@@ -3,10 +3,25 @@
 //dependencies
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const mongoose = require('mongoose');
 const keys = require('./../config/keys');
 
-//google passport setup
+//mongoDB user import
+const User = mongoose.model('User');
 
+passport.serializeUser((user, done) => {
+	done(null, user.id);
+})
+
+passport.deserializeUser((id, done) => {
+	User
+		.findById(id)
+		.then(user => {
+			done(null, user);
+		});
+});
+
+//google passport authentication
 passport.use(
 	new GoogleStrategy(
 		{
@@ -15,9 +30,25 @@ passport.use(
 			callbackURL: '/auth/google/callback'
 		}, 
 		(accessToken, refreshToken, profile, done) => {
-			console.log('access token ', accessToken);
-			console.log('refresh token ', refreshToken);
-			console.log('profile ', profile);
+			//Determine if user already has account
+			User
+				.findOne({ googleId: profile.id })
+				.then((existingUser) => {
+					if (existingUser) {
+						//login to existing account
+						done(null, existingUser);
+					}
+					else {
+						//create new account
+						new User({
+							googleId: profile.id,
+							userEmail: profile.emails,
+							name: profile.name
+						})
+						.save()
+						.then(user => done(null, user));
+					}
+				})
 		}
 	)
 );
