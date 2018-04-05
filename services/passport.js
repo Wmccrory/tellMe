@@ -45,8 +45,8 @@ passport.use(
 						//create new account
 						new User({
 							googleId: profile.id,
-							userEmail: profile.emails,
-							name: profile.name
+							userEmail: profile.emails[0].value,
+							name: {"firstName" : profile.name.givenName, "lastName" : profile.name.familyName}
 						})
 						.save()
 						.then(user => done(null, user));
@@ -77,9 +77,7 @@ passport.use(
 						//create new account
 						new User({
 							facebookId: profile.id,
-							facebookProfile: profile,
-							userEmail: profile.emails,
-							name: profile.name
+							name: profile._json.name
 						})
 						.save()
 						.then(user => done(null, user));
