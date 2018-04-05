@@ -5,8 +5,8 @@ module.exports = {
 	googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
 
 	//facebook info
-	facebookClientID: FACEBOOK_CLIENT_ID,
-	facebookClientSecret: FACEBOOK_CLIENT_SECRET,
+	facebookClientID: process.env.FACEBOOK_CLIENT_ID,
+	facebookClientSecret: process.env.FACEBOOK_CLIENT_SECRET,
 
 	//mongo info
 	mongoURI: process.env.MONGO_URI,
