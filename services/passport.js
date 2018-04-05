@@ -55,7 +55,7 @@ passport.use(
 	)
 );
 
-//facebook passport authentication
+//facebook passport authentication (Not complete yet because facebook is a pain in the ass to test on);
 passport.use(
 	new FacebookStrategy(
 		{
