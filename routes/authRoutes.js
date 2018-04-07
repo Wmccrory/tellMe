@@ -13,7 +13,7 @@ module.exports = (app) => {
 		scope: ['profile', 'email']
 	}));
 
-	app.get('/auth/google/callback', passport.authenticate('google'));
+	app.get('/auth/google/callback', passport.authenticate('google', {successRedirect: '/surveys', failureRedirect: '/'}));
 
 
 
@@ -23,7 +23,7 @@ module.exports = (app) => {
 		scope: ['public_profile', 'email', 'first_name', 'last_name']
 	}));
 
-	app.get('/auth/facebook/callback', passport.authenticate('facebook', {successRedirect: '/api/current_user', failureRedirect: '/failed'}));
+	app.get('/auth/facebook/callback', passport.authenticate('facebook', {successRedirect: '/surveys', failureRedirect: '/failed'}));
 
 	//user profile
 	
@@ -31,8 +31,10 @@ module.exports = (app) => {
 		res.send(req.user);
 	});
 
+	//user logout
+
 	app.get('/api/logout', (req, res) => {
 		req.logout();
-		res.send(req.user);
+		res.redirect('/');
 	})
 };
