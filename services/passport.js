@@ -32,26 +32,20 @@ passport.use(
 			callbackURL: '/auth/google/callback',
 			proxy: true
 		}, 
-		(accessToken, refreshToken, profile, done) => {
-			//Determine if user already has account
-			User
-				.findOne({ googleId: profile.id })
-				.then((existingUser) => {
-					if (existingUser) {
-						//login to existing account
-						done(null, existingUser);
-					}
-					else {
-						//create new account
-						new User({
-							googleId: profile.id,
-							userEmail: profile.emails[0].value,
-							name: {"firstName" : profile.name.givenName, "lastName" : profile.name.familyName}
-						})
-						.save()
-						.then(user => done(null, user));
-					}
-				})
+		async (accessToken, refreshToken, profile, done) => {
+			const existingUser = await User.findOne({ googleId: profile.id })				
+			if (existingUser) {
+				//login to existing account
+				return done(null, existingUser);
+			}
+
+			//create new account
+			const user = await new User({
+				googleId: profile.id,
+				userEmail: profile.emails[0].value,
+				name: {"firstName" : profile.name.givenName, "lastName" : profile.name.familyName}
+			}).save();
+			done(null, user);
 		}
 	)
 );
@@ -77,7 +71,8 @@ passport.use(
 						//create new account
 						new User({
 							facebookId: profile.id,
-							name: profile._json.name
+							name: profile._json.name,
+							facebookProfile: profile,
 						})
 						.save()
 						.then(user => done(null, user));
