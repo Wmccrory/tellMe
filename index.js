@@ -34,6 +34,15 @@ app.use(passport.session());
 require('./routes/authRoutes')(app);	//user authentication
 require('./routes/billingRoutes')(app);	//billing routes
 
+if (process.env.NODE_ENV === 'production') {
+	app.use(express.static('client/build'));
+
+	const path = require('path');
+	app.get('*', (req, res) => {
+		res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+	});
+}
+
 //starting up server
 app.listen(PORT, () => {
 	console.log(`Now listening on port ${PORT}`);
